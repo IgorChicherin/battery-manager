@@ -1,0 +1,10 @@
+[Unit]
+Description=Battery Level Monitor for TLP
+After=tlp.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /usr/local/bin/battery-monitor.py
+
+[Install]
+WantedBy=multi-user.target
