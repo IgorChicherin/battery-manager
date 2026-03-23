@@ -4,7 +4,6 @@ Battery Check - Quick battery and TLP status check
 """
 
 import subprocess
-import sys
 from pathlib import Path
 
 
@@ -53,6 +52,18 @@ def get_tlp_config():
     return output
 
 
+def get_cpu_frequency():
+    """Get current CPU frequency info."""
+    freq = run_cmd("cat /proc/cpuinfo | grep 'cpu MHz' | head -1 | awk '{print $4}'")
+    max_freq = run_cmd("cat /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq 2>/dev/null")
+    if max_freq:
+        try:
+            max_freq = f"{int(max_freq)/1000000:.1f} GHz"
+        except ValueError:
+            max_freq = None
+    return freq, max_freq
+
+
 def get_timer_status():
     """Get battery monitor timer status."""
     output = run_cmd("systemctl list-timers --no-pager battery-monitor.timer 2>/dev/null | grep battery")
@@ -68,10 +79,15 @@ def get_config_files():
 def main():
     battery = get_battery_level()
     ac_power = is_on_ac_power()
+    curr_freq, max_freq = get_cpu_frequency()
 
     print("=== Battery Status ===")
     print(f"Battery: {battery}%")
     print(f"Power: {'AC (plugged in)' if ac_power else 'BATTERY'}")
+
+    print("\n=== CPU Frequency ===")
+    print(f"Current: {curr_freq} MHz" if curr_freq else "Current: N/A")
+    print(f"Max Allowed: {max_freq}" if max_freq else "Max Allowed: N/A")
 
     print("\n=== Active TLP Config ===")
     config = read_file("/etc/tlp.d/99-current-battery.conf")

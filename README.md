@@ -4,15 +4,17 @@ Automatic TLP power profile switching based on battery level.
 
 ## Features
 
-- **4-tier power management:**
-  - 81-100% battery → 100% CPU (FULL performance)
-  - 51-80% battery → 80% CPU (BALANCED)
-  - 31-50% battery → 50% CPU (MEDIUM)
-  - 0-30% battery → 30% CPU (AGGRESSIVE power saving)
+- **4-tier power management with CPU frequency limiting:**
+  - 81-100% battery → 100% CPU, 100% freq (FULL performance)
+  - 51-80% battery → 80% CPU, 80% freq (BALANCED)
+  - 31-50% battery → 50% CPU, 50% freq (MEDIUM)
+  - 0-30% battery → 35% CPU, 35% freq (AGGRESSIVE power saving)
 
 - **Automatic switching** via systemd timer (every 2 minutes)
 - **Python-based** for better maintainability
 - **Easy status checking** with battery-check tool
+- **Direct CPU frequency control** - actually limits clock speed
+- **Dynamic frequency detection** - reads max CPU freq from hardware
 
 ## Installation
 
