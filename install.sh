@@ -7,6 +7,25 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 echo "Installing Battery Manager from: $SCRIPT_DIR"
 
+# Check and install TLP if not present
+echo "→ Checking for TLP..."
+if ! command -v tlp &> /dev/null && ! [ -f /usr/bin/tlp ]; then
+    echo "  TLP not found, installing..."
+    if command -v pacman &> /dev/null; then
+        sudo pacman -S --noconfirm tlp tlp-rdw
+    elif command -v apt &> /dev/null; then
+        sudo apt install -y tlp tlp-rdw
+    elif command -v dnf &> /dev/null; then
+        sudo dnf install -y tlp tlp-rdw
+    else
+        echo "Error: Package manager not found. Please install TLP manually."
+        exit 1
+    fi
+    echo "  TLP installed successfully"
+else
+    echo "  TLP is already installed"
+fi
+
 # Copy systemd files
 echo "→ Copying systemd files..."
 sudo cp "$SCRIPT_DIR/battery-monitor.service" /etc/systemd/system/

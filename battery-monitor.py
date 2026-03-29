@@ -127,6 +127,7 @@ PCIE_ASPM_ON_BAT="{profile['pcie']}"
 WIFI_PWR_ON_BAT="on"
 """
     try:
+        Path(CONFIG).parent.mkdir(parents=True, exist_ok=True)
         Path(CONFIG).write_text(config_content)
         return True
     except PermissionError:

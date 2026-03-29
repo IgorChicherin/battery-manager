@@ -24,6 +24,7 @@ cd ~/battery-manager
 ```
 
 This will:
+- Install TLP if not already installed (`tlp tlp-rdw`)
 - Copy systemd service files to `/etc/systemd/system/`
 - Install `battery-monitor.py` to `/usr/local/bin/`
 - Create symlinks for easy command-line access
