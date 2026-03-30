@@ -79,15 +79,17 @@ def get_config_files():
 def main():
     battery = get_battery_level()
     ac_power = is_on_ac_power()
-    curr_freq, max_freq = get_cpu_frequency()
 
     print("=== Battery Status ===")
     print(f"Battery: {battery}%")
     print(f"Power: {'AC (plugged in)' if ac_power else 'BATTERY'}")
 
-    print("\n=== CPU Frequency ===")
-    print(f"Current: {curr_freq} MHz" if curr_freq else "Current: N/A")
-    print(f"Max Allowed: {max_freq}" if max_freq else "Max Allowed: N/A")
+    # Only show CPU frequency when on battery power
+    if not ac_power:
+        curr_freq, max_freq = get_cpu_frequency()
+        print("\n=== CPU Frequency ===")
+        print(f"Current: {curr_freq} MHz" if curr_freq else "Current: N/A")
+        print(f"Max Allowed: {max_freq}" if max_freq else "Max Allowed: N/A")
 
     print("\n=== Active TLP Config ===")
     config = read_file("/etc/tlp.d/99-current-battery.conf")
